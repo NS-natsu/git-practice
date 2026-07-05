@@ -8,6 +8,7 @@ body {
   width: 100svw;
   height: 100svh;
   overflow-x: hidden;
+  color: #252525;
   
   main {
     flex-grow: 1;
@@ -24,6 +25,6 @@ body {
     font-size: 0.75rem;
     text-align: center;
     color: #FFFFFF;
-    background-color: #000000;
+    background-color: #252525;
   }
 }
