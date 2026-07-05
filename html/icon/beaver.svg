@@ -112,7 +112,7 @@
         </mask>
     </defs>
 
-    <g fill="#333" transform="translate(75, 100)">
+    <g fill="#333" fill-opacity="0.4" transform="translate(75, 100)">
         <!--鼻-->
         <path d="
             m 149,377
