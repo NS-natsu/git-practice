@@ -9,4 +9,15 @@ main {
   background: center / 25% auto no-repeat;
   transform-origin: center;
   background-image: url("../icon/beaver.svg");
+  animation:
+    beaverMoveX 10s linear infinite,
+    beaverMoveY 10s linear infinite;
+}
+
+@keyframes beaverMoveX{
+    0%, 100% { background-position-x: 50%; }
+}
+
+@keyframes beaverMoveY{
+    0%, 100% { background-position-y: 50%; }
 }

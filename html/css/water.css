@@ -1,0 +1,146 @@
+.water{
+  --water-level: 0%;
+
+  display: flex;
+  position: absolute;
+  inset: auto 0 0 0;
+  height: var(--water-level);
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 6px,
+      rgba(190, 67, 0, 0.571) 6px
+    );
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent 12px,
+        rgba(120,205,255,.20) 12px,
+        rgba(90,175,255,.45),
+        rgba(45,120,220,.70)
+      );
+  }
+  
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        transparent 12px,
+        rgba(255,255,255,.12),
+        transparent 100px
+      );
+  }
+
+  .waterSurface{
+    position: relative;
+    width: max(200%, 120px);
+    height: 12px;
+    overflow: hidden;
+
+    &::before, &::after {
+      content: "";
+      left: -30px;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-size:60px 12px;
+      background: url(../icon/wave.svg) repeat-x;
+      animation:
+        surfaceMove 10s linear infinite,
+        surfaceBob 3s ease-in-out infinite;
+    }
+
+    &::after {
+      scale: -1 1;
+      animation-delay: 0s, 1.4s;
+    }
+  }
+
+  .underwater{
+    position: relative;
+    overflow: hidden;
+    inset: 0;
+    flex-grow: 1;
+    opacity: .5;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        rgba(255,255,255,.06) 0 8px,
+        transparent 8px 30px
+      );
+    animation: flow 10s linear infinite;
+
+    .bubble {
+      position: absolute;
+      bottom: -30px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+      animation: bubble 8s infinite;
+
+      &:nth-child(1) {
+        left:10%;
+        animation-delay:0s;
+      }
+
+      &:nth-child(2){
+        left:35%;
+        animation-delay:2s;
+      }
+
+      &:nth-child(3){
+        left:55%;
+        animation-delay:4s;
+      }
+
+      &:nth-child(4){
+        left:75%;
+        animation-delay:1s;
+      }
+
+      &:nth-child(5){
+        left:90%;
+        animation-delay:6s;
+      }
+    }
+  }
+}
+
+@keyframes surfaceMove {
+  from { transform: translateX(-30px); }
+  to { transform: translateX(30px); }
+}
+
+@keyframes surfaceBob {
+  0%, 100% { top: 0; }
+  50% { top: 2px; }
+}
+
+@keyframes bubble {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% { opacity: .5; }
+  100% {
+    transform: translateY(-500px);
+    opacity: 0;
+  }
+}
+
+@keyframes flow {
+  from { background-position: 0 0; }
+  to { background-position: 220px 220px; }
+}
