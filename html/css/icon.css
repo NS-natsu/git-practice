@@ -1,6 +1,6 @@
 header {
   position: relative;
-  background: right / auto 100% no-repeat;
+  background: left / auto 100% no-repeat;
   transform-origin: center;
   background-image: url("../icon/squirrel.svg");
 }
