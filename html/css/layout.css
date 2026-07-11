@@ -46,6 +46,22 @@ body {
 
 .counter {
   display: flex;
-  background-color: #FFFFFF;
   width: fit-content;
+
+  button {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+    text-align: center;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+  }
+
+  .value {
+    width: 7rem;
+    font-size: 2rem;
+    text-align: center;
+    background-color: #252525;
+    color: #FFFFFF;
+  }
 }
