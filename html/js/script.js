@@ -8,8 +8,8 @@ counters.forEach((counter) => {
         const isMinus = e.target.classList.contains("minus");
 
         if (isPlus || isMinus) {
-            const value = counter.querySelector(".value");
-            let currentValue = parseInt(value.textContent);
+            const display = counter.querySelector(".display");
+            let currentValue = parseInt(display.textContent);
 
             if (isPlus) {
                 currentValue++;
@@ -17,7 +17,7 @@ counters.forEach((counter) => {
                 currentValue--;
             }
 
-            value.textContent = currentValue;
+            display.textContent = currentValue;
         }
     });
 });
