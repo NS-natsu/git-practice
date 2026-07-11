@@ -34,3 +34,7 @@ body {
     background-color: #252525;
   }
 }
+
+.counter {
+  display: flex;
+}
