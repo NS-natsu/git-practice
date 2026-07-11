@@ -46,4 +46,6 @@ body {
 
 .counter {
   display: flex;
+  background-color: #FFFFFF;
+  width: fit-content;
 }
