@@ -46,6 +46,7 @@ body {
 
 .counter {
   display: flex;
+  position: relative;
   width: fit-content;
 
   button {
