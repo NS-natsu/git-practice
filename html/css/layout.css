@@ -105,10 +105,9 @@ body {
     width: auto;
     flex-shrink: 0;
     opacity: 0.3;
-    pointer-events: none;
   }
   
   &:focus-within > svg {
-    opacity: 0;
+    display: none;
   }
 }
