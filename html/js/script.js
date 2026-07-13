@@ -20,4 +20,18 @@ counters.forEach((counter) => {
             display.textContent = currentValue;
         }
     });
+
+    counter.querySelector(".title > input").addEventListener("blur", (e) => {
+        const title = e.target.value || e.target.placeholder;
+        // TODO: titleの更新の適応
+    });
 });
+
+document.querySelector("main").addEventListener('keydown', (e) => {
+    e.stopPropagation();
+
+    if (e.key === 'Enter' && e.target.matches('.title > input')) {
+        e.preventDefault();
+        e.target.blur(); 
+    }
+}, { capture: true });
