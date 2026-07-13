@@ -71,12 +71,12 @@ body {
   display: flex;
   position: relative;
   width: 10rem;
-  height: 3rem;
   background-color: #FFFFFF;
-  align-items: center;
+  margin-block: auto;
+  padding-inline: 0.25em;
 
   > * { background-color: inherit; }
-  
+
   > input {
     width: 100%;
     height: fit-content;
