@@ -67,12 +67,20 @@ body {
   }
 
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 3rem;
     height: 3rem;
     font-size: 2rem;
     text-align: center;
     background-color: #FFFFFF;
     border-radius: 5px;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
   }
 
   .display {
