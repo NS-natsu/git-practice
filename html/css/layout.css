@@ -65,6 +65,10 @@ body {
     background-color: #252525;
     color: #FFFFFF;
   }
+  
+  &:focus-visible, &:focus-within:has(*:focus-visible) {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
 }
 
 .counter > .title {

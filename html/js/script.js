@@ -18,6 +18,7 @@ counters.forEach((counter) => {
             }
 
             display.textContent = currentValue;
+            e.target.closest("main > .counter").focus({ focusVisible: true });
         }
     });
 
@@ -27,11 +28,31 @@ counters.forEach((counter) => {
     });
 });
 
-document.querySelector("main").addEventListener('keydown', (e) => {
+document.querySelector("main").addEventListener("keydown", (e) => {
     e.stopPropagation();
 
-    if (e.key === 'Enter' && e.target.matches('.title > input')) {
+    const counter = e.target.closest("main > .counter");
+    if (!counter) return;
+
+    if (e.key === "Enter" && e.target.matches(".title > input")) {
         e.preventDefault();
-        e.target.blur(); 
+        counter.focus();
+        return;
     }
+
+    switch (e.key) {
+        case "t":
+            counter.querySelector(".title > input").focus();
+            break;
+        case "ArrowUp":
+            counter.querySelector("& > button.plus").click();
+            break;
+        case "ArrowDown":
+            counter.querySelector("& > button.minus").click();
+            break;
+        default:
+            return;
+    }
+    
+    e.preventDefault();
 }, { capture: true });
