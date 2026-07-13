@@ -70,7 +70,6 @@ body {
 .counter > .title {
   display: flex;
   width: 10rem;
-  background-color: #FFFFFF;
   margin-block: auto;
   padding-inline: 0.25em;
   gap: 0.25em;
@@ -87,6 +86,7 @@ body {
     border: none;
     outline: none;
     color: currentColor;
+    background-color: transparent;
 
     &::placeholder {
       color: currentColor;
