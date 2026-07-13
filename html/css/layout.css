@@ -45,9 +45,26 @@ body {
 }
 
 .counter {
-  display: flex;
+  display: grid;
+  grid-template-columns: 3rem 7rem 3rem;
+  grid-template-rows: 3rem 3rem;
   position: relative;
   width: fit-content;
+
+  .plus {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .minus {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .reset {
+    grid-column: 1;
+    grid-row: 1;
+  }
 
   button {
     width: 3rem;
@@ -59,7 +76,8 @@ body {
   }
 
   .display {
-    width: 7rem;
+    grid-column: 2;
+    grid-row: 2;
     font-size: 2rem;
     text-align: center;
     background-color: #252525;
