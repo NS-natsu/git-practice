@@ -85,6 +85,17 @@ body {
     border: none;
     outline: none;
     color: currentColor;
+
+    &::placeholder {
+      color: currentColor;
+    }
+
+    &:focus {
+      box-shadow: inset 0 -1px rgb(from currentColor r g b / 50%);
+      &::placeholder {
+        color: revert;
+      }
+    }
   }
   
   > svg {
