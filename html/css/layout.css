@@ -73,8 +73,10 @@ body {
   margin-block: auto;
   padding-inline: 0.25em;
   gap: 0.25em;
+  pointer-events: none;
 
   > * {
+    pointer-events: all;
     font-size: inherit;
     line-height: 1.2;
     height: 1lh;
