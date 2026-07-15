@@ -23,9 +23,15 @@ counters.forEach((counter) => {
     });
 });
 
+document.querySelector("main").addEventListener("focus", (e) => {
+    if (!e.target.matches(".counter > .title > input")) return;
+    e.target.dataset["beforeTitle"] = e.target.value;
+}, { capture: true });
+
 document.querySelector("main").addEventListener("blur", (e) => {
     if (!e.target.matches(".counter > .title > input")) return;
     const title = e.target.value || e.target.placeholder;
+    delete e.target.dataset["beforeTitle"];
     // TODO: titleの更新の適応
 }, { capture: true });
 
@@ -35,9 +41,16 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     const counter = e.target.closest("main > .counter");
     if (!counter) return;
 
-    if (e.key === "Enter" && e.target.matches(".title > input")) {
-        e.preventDefault();
-        counter.focus();
+    if (e.target.matches(".title > input")) {
+        switch (e.key) {
+            case "Escape":
+                e.target.value = e.target.dataset["beforeTitle"];
+            case "Enter":
+                e.preventDefault();
+                counter.focus();
+                break;
+            default: break;
+        }
         return;
     }
 
