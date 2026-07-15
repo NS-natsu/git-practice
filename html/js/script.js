@@ -21,12 +21,13 @@ counters.forEach((counter) => {
             e.target.closest("main > .counter").focus({ focusVisible: true });
         }
     });
-
-    counter.querySelector(".title > input").addEventListener("blur", (e) => {
-        const title = e.target.value || e.target.placeholder;
-        // TODO: titleの更新の適応
-    });
 });
+
+document.querySelector("main").addEventListener("blur", (e) => {
+    if (!e.target.matches(".counter > .title > input")) return;
+    const title = e.target.value || e.target.placeholder;
+    // TODO: titleの更新の適応
+}, { capture: true });
 
 document.querySelector("main").addEventListener("keydown", (e) => {
     e.stopPropagation();
