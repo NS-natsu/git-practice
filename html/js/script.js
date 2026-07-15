@@ -67,4 +67,4 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     }
     
     e.preventDefault();
-}, { capture: true });
+});
