@@ -36,9 +36,7 @@ document.querySelector("main").addEventListener("blur", (e) => {
 }, { capture: true });
 
 document.querySelector("main").addEventListener("keydown", (e) => {
-    e.stopPropagation();
-
-    const counter = e.target.closest("main > .counter");
+    const counter = e.target.closest(".counter");
     if (!counter) return;
 
     if (e.target.matches(".title > input")) {
@@ -59,10 +57,10 @@ document.querySelector("main").addEventListener("keydown", (e) => {
             counter.querySelector(".title > input").focus();
             break;
         case "ArrowUp":
-            counter.querySelector("& > button.plus").click();
+            counter.querySelector("button.plus").click();
             break;
         case "ArrowDown":
-            counter.querySelector("& > button.minus").click();
+            counter.querySelector("button.minus").click();
             break;
         default:
             return;
