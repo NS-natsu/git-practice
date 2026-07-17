@@ -30,19 +30,21 @@ document.querySelector("main").addEventListener("focus", (e) => {
 
 document.querySelector("main").addEventListener("blur", (e) => {
     if (!e.target.matches(".counter > .title > input")) return;
-    const title = e.target.value || e.target.placeholder;
     delete e.target.dataset["beforeTitle"];
     // TODO: titleの更新の適応
+    const title = e.target.value || e.target.placeholder;
 }, { capture: true });
 
 document.querySelector("main").addEventListener("keydown", (e) => {
     const counter = e.target.closest(".counter");
     if (!counter) return;
 
+    // input編集時操作定義
     if (e.target.matches(".title > input")) {
         switch (e.key) {
             case "Escape":
                 e.target.value = e.target.dataset["beforeTitle"];
+                // fall through
             case "Enter":
                 e.preventDefault();
                 counter.focus();
@@ -52,6 +54,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
         return;
     }
 
+    //　非input編集時操作定義
     switch (e.key) {
         case "t":
             counter.querySelector(".title > input").focus();
