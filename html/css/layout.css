@@ -99,7 +99,7 @@ body {
     }
 
     &:focus {
-      box-shadow: inset 0 -1px rgb(from currentColor r g b / 50%);
+      box-shadow: inset 0 -1px color-mix(in srgb, currentColor 50%, #FFFFFF);
       
       &::placeholder {
         color: revert;
@@ -110,7 +110,7 @@ body {
   > svg {
     width: auto;
     flex-shrink: 0;
-    opacity: 0.3;
+    stroke: color-mix(in srgb, currentColor 30%, #FFFFFF);
   }
   
   &:focus-within > svg {
