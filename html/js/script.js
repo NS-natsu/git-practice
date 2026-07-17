@@ -21,7 +21,7 @@ counters.forEach((counter) => {
             }
 
             display.textContent = currentValue;
-            e.target.closest("main > .counter").focus({ focusVisible: true });
+            e.target.closest(".counter").focus({ focusVisible: true });
         }
     });
 });
@@ -61,6 +61,9 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     switch (e.key) {
         case "t":
             counter.querySelector(".title > input").focus();
+            break;
+        case "r":
+            counter.querySelector("button.reset").click();
             break;
         case "ArrowUp":
             counter.querySelector("button.plus").click();
