@@ -46,37 +46,25 @@ body {
 
 .counter {
   display: grid;
-  grid-template-columns: 3rem 10rem 3rem;
-  grid-template-rows: 3rem 3rem;
   position: relative;
   width: fit-content;
+  
+  grid-template-columns: 3rem 10rem 3rem;
+  grid-template-rows: 3rem 3rem;
+  grid-template-areas:
+    "reset title ."
+    "minus display plus";
 
-  .plus {
-    grid-column: 3;
-    grid-row: 2;
-  }
-
-  .minus {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .reset {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .title {
-    grid-column: 2;
-    grid-row: 1;
-  }
+  .reset { grid-area: reset; }
+  .title { grid-area: title; }
+  .minus { grid-area: minus; }
+  .display { grid-area: display; }
+  .plus { grid-area: plus; }
 
   button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3rem;
-    height: 3rem;
     font-size: 2rem;
     text-align: center;
     background-color: #FFFFFF;
@@ -90,8 +78,6 @@ body {
   }
 
   .display {
-    grid-column: 2;
-    grid-row: 2;
     font-size: 2rem;
     text-align: center;
     background-color: #252525;
@@ -105,13 +91,10 @@ body {
 
 .counter > .title {
   display: flex;
-  margin-block: auto;
-  padding-inline: 0.25em;
+  margin: auto 0.25em;
   gap: 0.25em;
-  pointer-events: none;
 
   > * {
-    pointer-events: all;
     font-size: inherit;
     line-height: 1.2;
     height: 1lh;
