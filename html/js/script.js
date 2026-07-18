@@ -35,24 +35,17 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     }
 
     //　非input編集時操作定義
-    switch (e.key) {
-        case "t":
-            counter.querySelector(".title > input").focus();
-            break;
-        case "r":
-            counter.querySelector("button.reset").click();
-            break;
-        case "ArrowUp":
-            counter.querySelector("button.plus").click();
-            break;
-        case "ArrowDown":
-            counter.querySelector("button.minus").click();
-            break;
-        default:
-            return;
-    }
-    
-    e.preventDefault();
+    const keyActions = {
+        "t": () => counter.querySelector(".title > input").focus(),
+        "r": () => counter.querySelector("button.reset").click(),
+        "ArrowUp": () => counter.querySelector("button.plus").click(),
+        "ArrowDown": () => counter.querySelector("button.minus").click(),
+    };
+
+    if (e.key in keyActions) {
+        keyActions[e.key]();
+        e.preventDefault();
+    }    
 });
 
 /**
