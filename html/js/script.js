@@ -1,5 +1,6 @@
 "use strict";
 
+/** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
 document.querySelector("main").appendChild(createCounterElement());
 
@@ -19,7 +20,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     const counter = e.target.closest(".counter");
     if (!counter) return;
 
-    // input編集時操作定義
+    // title編集時操作定義
     if (e.target.matches(".title > input")) {
         switch (e.key) {
             case "Escape":
@@ -34,7 +35,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
         return;
     }
 
-    //　非input編集時操作定義
+    // 非title編集時操作定義
     const keyActions = {
         "t": () => counter.querySelector(".title > input").focus(),
         "r": () => counter.querySelector("button.reset").click(),
@@ -71,8 +72,13 @@ function createCounterElement() {
     return counter;
 }
 
+/**
+ * カウンターの各ボタンに対するイベントハンドラを登録する
+ * @param {HTMLDivElement} counter クリックイベント未登録のカウンター要素
+ */
 function setupCounterButtonBehavior(counter) {
-    if (counters.has(counter) || !counter.matches(".counter")) return;
+    if (!(counter instanceof HTMLDivElement) || !counter.matches(".counter")) return;
+    if (counters.has(counter)) return;
     counters.add(counter);
     counter.addEventListener("click", (e) => {
         const isPlus = e.target.classList.contains("plus");
