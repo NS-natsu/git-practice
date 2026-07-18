@@ -1,30 +1,7 @@
 "use strict";
 
-const counters = document.querySelectorAll(".counter");
-
-counters.forEach((counter) => {
-    counter.addEventListener("click", (e) => {
-        const isPlus = e.target.classList.contains("plus");
-        const isMinus = e.target.classList.contains("minus");
-        const isReset = e.target.classList.contains("reset");
-
-        if (isPlus || isMinus || isReset) {
-            const display = counter.querySelector(".display");
-            let currentValue = parseInt(display.textContent);
-
-            if (isPlus) {
-                currentValue++;
-            } else if (isMinus) {
-                currentValue--;
-            } else if (isReset) {
-                currentValue = 0;
-            }
-
-            display.textContent = currentValue;
-            e.target.closest(".counter").focus({ focusVisible: true });
-        }
-    });
-});
+const counters = new WeakSet();
+document.querySelector("main").appendChild(createCounterElement());
 
 document.querySelector("main").addEventListener("focus", (e) => {
     if (!e.target.matches(".counter > .title > input")) return;
@@ -77,3 +54,52 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     
     e.preventDefault();
 });
+
+/**
+ * JSDocつけてみる
+ * イベントハンドラが設定済みのカウンター要素を生成して返す
+ * @returns {HTMLDivElement} セットアップ済みのカウンター要素
+ */
+function createCounterElement() {
+    const template = document.querySelector("template#counter-template");
+    if (!template) {
+        // エラーハンドリングもやってみる
+        throw new ReferenceError("HTML内に '#counter-template' が見つかりません。");
+    }
+
+    /** @type {HTMLDivElement | null} */
+    const counter = template.content.cloneNode(true).querySelector("div.counter");
+    if (!counter) {
+        throw new DOMException("テンプレート内に子要素（div.counter）が存在しません。", "NotFoundError")
+    }
+
+    setupCounterButtonBehavior(counter);
+
+    return counter;
+}
+
+function setupCounterButtonBehavior(counter) {
+    if (counters.has(counter) || !counter.matches(".counter")) return;
+    counters.add(counter);
+    counter.addEventListener("click", (e) => {
+        const isPlus = e.target.classList.contains("plus");
+        const isMinus = e.target.classList.contains("minus");
+        const isReset = e.target.classList.contains("reset");
+
+        if (isPlus || isMinus || isReset) {
+            const display = counter.querySelector(".display");
+            let currentValue = parseInt(display.textContent);
+
+            if (isPlus) {
+                currentValue++;
+            } else if (isMinus) {
+                currentValue--;
+            } else if (isReset) {
+                currentValue = 0;
+            }
+
+            display.textContent = currentValue;
+            e.target.closest(".counter").focus({ focusVisible: true });
+        }
+    });
+}
