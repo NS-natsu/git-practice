@@ -1,5 +1,6 @@
 "use strict";
 
+/** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
 document.querySelector("main").appendChild(createCounterElement());
 
@@ -19,7 +20,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     const counter = e.target.closest(".counter");
     if (!counter) return;
 
-    // input編集時操作定義
+    // title編集時操作定義
     if (e.target.matches(".title > input")) {
         switch (e.key) {
             case "Escape":
@@ -34,25 +35,18 @@ document.querySelector("main").addEventListener("keydown", (e) => {
         return;
     }
 
-    //　非input編集時操作定義
-    switch (e.key) {
-        case "t":
-            counter.querySelector(".title > input").focus();
-            break;
-        case "r":
-            counter.querySelector("button.reset").click();
-            break;
-        case "ArrowUp":
-            counter.querySelector("button.plus").click();
-            break;
-        case "ArrowDown":
-            counter.querySelector("button.minus").click();
-            break;
-        default:
-            return;
-    }
-    
-    e.preventDefault();
+    // 非title編集時操作定義
+    const keyActions = {
+        "t": () => counter.querySelector(".title > input").focus(),
+        "r": () => counter.querySelector("button.reset").click(),
+        "ArrowUp": () => counter.querySelector("button.plus").click(),
+        "ArrowDown": () => counter.querySelector("button.minus").click(),
+    };
+
+    if (e.key in keyActions) {
+        keyActions[e.key]();
+        e.preventDefault();
+    }    
 });
 
 /**
@@ -78,8 +72,13 @@ function createCounterElement() {
     return counter;
 }
 
+/**
+ * カウンターの各ボタンに対するイベントハンドラを登録する
+ * @param {HTMLDivElement} counter クリックイベント未登録のカウンター要素
+ */
 function setupCounterButtonBehavior(counter) {
-    if (counters.has(counter) || !counter.matches(".counter")) return;
+    if (!(counter instanceof HTMLDivElement) || !counter.matches(".counter")) return;
+    if (counters.has(counter)) return;
     counters.add(counter);
     counter.addEventListener("click", (e) => {
         const isPlus = e.target.classList.contains("plus");
@@ -88,18 +87,16 @@ function setupCounterButtonBehavior(counter) {
 
         if (isPlus || isMinus || isReset) {
             const display = counter.querySelector(".display");
-            let currentValue = parseInt(display.textContent);
 
             if (isPlus) {
-                currentValue++;
+                display.valueAsNumber++;
             } else if (isMinus) {
-                currentValue--;
+                display.valueAsNumber--;
             } else if (isReset) {
-                currentValue = 0;
+                display.valueAsNumber = 0;
             }
-
-            display.textContent = currentValue;
-            e.target.closest(".counter").focus({ focusVisible: true });
+    
+            counter.focus({ focusVisible: true });
         }
     });
 }
