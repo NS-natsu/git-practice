@@ -1,5 +1,11 @@
 * { box-sizing: border-box; }
 
+input {
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
 button {
   background-color: transparent;
   border: none;
@@ -107,9 +113,6 @@ body {
 
   > input {
     width: 100%;
-    padding: 0;
-    border: none;
-    outline: none;
     color: currentColor;
     background-color: transparent;
 

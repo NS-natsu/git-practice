@@ -81,17 +81,15 @@ function setupCounterButtonBehavior(counter) {
 
         if (isPlus || isMinus || isReset) {
             const display = counter.querySelector(".display");
-            let currentValue = parseInt(display.textContent);
 
             if (isPlus) {
-                currentValue++;
+                display.valueAsNumber++;
             } else if (isMinus) {
-                currentValue--;
+                display.valueAsNumber--;
             } else if (isReset) {
-                currentValue = 0;
+                display.valueAsNumber = 0;
             }
 
-            display.textContent = currentValue;
             e.target.closest(".counter").focus({ focusVisible: true });
         }
     });
