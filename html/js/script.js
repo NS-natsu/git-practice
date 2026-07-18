@@ -1,6 +1,7 @@
 "use strict";
 
 const counters = new WeakSet();
+document.querySelector("main").appendChild(createCounterElement());
 
 function setupCounterButtonBehavior(counter) {
     if (counters.has(counter) || !counter.matches(".counter")) return;
