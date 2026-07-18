@@ -60,7 +60,7 @@ body {
   grid-template-columns: 3rem 10rem 3rem;
   grid-template-rows: 3rem 3rem;
   grid-template-areas:
-    "reset title ."
+    "reset title remove"
     "minus display plus";
   
   background-color: #FFFFFF;
@@ -68,6 +68,7 @@ body {
 
   .reset { grid-area: reset; }
   .title { grid-area: title; }
+  .remove { grid-area: remove; }
   .minus { grid-area: minus; }
   .display { grid-area: display; }
   .plus { grid-area: plus; }
