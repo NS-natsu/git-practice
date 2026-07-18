@@ -85,17 +85,18 @@ function setupCounterButtonBehavior(counter) {
         const isMinus = e.target.classList.contains("minus");
         const isReset = e.target.classList.contains("reset");
 
-        if (!isPlus && !isMinus && !isReset) return;
-        const display = counter.querySelector(".display");
+        if (isPlus || isMinus || isReset) {
+            const display = counter.querySelector(".display");
 
-        if (isPlus) {
-            display.valueAsNumber++;
-        } else if (isMinus) {
-            display.valueAsNumber--;
-        } else if (isReset) {
-            display.valueAsNumber = 0;
+            if (isPlus) {
+                display.valueAsNumber++;
+            } else if (isMinus) {
+                display.valueAsNumber--;
+            } else if (isReset) {
+                display.valueAsNumber = 0;
+            }
+    
+            counter.focus({ focusVisible: true });
         }
-
-        counter.focus({ focusVisible: true });
     });
 }
