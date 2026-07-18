@@ -1,8 +1,10 @@
 "use strict";
 
-const counters = document.querySelectorAll(".counter");
+const counters = new WeakSet();
 
-counters.forEach((counter) => {
+function setupCounterButtonBehavior(counter) {
+    if (counters.has(counter) || !counter.matches(".counter")) return;
+    counters.add(counter);
     counter.addEventListener("click", (e) => {
         const isPlus = e.target.classList.contains("plus");
         const isMinus = e.target.classList.contains("minus");
@@ -24,7 +26,30 @@ counters.forEach((counter) => {
             e.target.closest(".counter").focus({ focusVisible: true });
         }
     });
-});
+}
+
+/**
+ * JSDocつけてみる
+ * イベントハンドラが設定済みのカウンター要素を生成して返す
+ * @returns {HTMLDivElement} セットアップ済みのカウンター要素
+ */
+function createCounterElement() {
+    const template = document.querySelector("template#counter-template");
+    if (!template) {
+        // エラーハンドリングもやってみる
+        throw new ReferenceError("HTML内に '#counter-template' が見つかりません。");
+    }
+
+    /** @type {HTMLDivElement | null} */
+    const counter = template.content.cloneNode(true).querySelector("div.counter");
+    if (!counter) {
+        throw new DOMException("テンプレート内に子要素（div.counter）が存在しません。", "NotFoundError")
+    }
+
+    setupCounterButtonBehavior(counter);
+
+    return counter;
+}
 
 document.querySelector("main").addEventListener("focus", (e) => {
     if (!e.target.matches(".counter > .title > input")) return;
