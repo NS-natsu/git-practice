@@ -84,6 +84,13 @@ function setupCounterButtonBehavior(counter) {
         const isPlus = e.target.classList.contains("plus");
         const isMinus = e.target.classList.contains("minus");
         const isReset = e.target.classList.contains("reset");
+        const isRemove = e.target.classList.contains("remove");
+
+        if (isRemove) {
+            counter.remove();
+            counters.delete(counter);
+            return;
+        }
 
         if (isPlus || isMinus || isReset) {
             const display = counter.querySelector(".display");
