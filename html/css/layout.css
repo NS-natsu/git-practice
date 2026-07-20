@@ -140,3 +140,30 @@ body {
     display: none;
   }
 }
+
+#add-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(16rem + 20px);
+  height: calc(6rem + 15px);
+  font-size: 2rem;
+  text-align: center;
+  color: #FFFFFF;
+  background-color: transparent;
+  border-width: 5px;
+  border-style: dashed;
+  border-color: #FFFFFF;
+  border-radius: 5px;
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+  }
+
+  &:hover {
+    color: #252525;
+    border-color: #252525;
+  }
+}
