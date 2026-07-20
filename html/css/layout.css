@@ -161,4 +161,9 @@ body {
     height: 2rem;
     pointer-events: none;
   }
+
+  &:hover {
+    color: #252525;
+    border-color: #252525;
+  }
 }
