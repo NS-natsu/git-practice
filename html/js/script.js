@@ -49,6 +49,10 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     }    
 });
 
+document.querySelector("#add-counter").addEventListener("click", (e) => {
+    document.querySelector("main").appendChild(createCounterElement());
+});
+
 /**
  * JSDocつけてみる
  * イベントハンドラが設定済みのカウンター要素を生成して返す
