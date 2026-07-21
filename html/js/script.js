@@ -46,7 +46,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
   if (e.key in keyActions) {
     keyActions[e.key]();
     e.preventDefault();
-  }    
+  }
 });
 
 document.querySelector("#add-counter").addEventListener("click", (e) => {
@@ -106,7 +106,7 @@ function setupCounterButtonBehavior(counter) {
       } else if (isReset) {
         display.valueAsNumber = 0;
       }
-  
+
       counter.focus({ focusVisible: true });
     }
   });

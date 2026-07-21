@@ -24,7 +24,7 @@ body {
   height: 100svh;
   overflow-x: hidden;
   color: #252525;
-  
+
   main {
     position: relative;
     z-index: 0;
@@ -56,13 +56,13 @@ body {
   padding: 5px;
   width: fit-content;
   gap: 5px;
-  
+
   grid-template-columns: 3rem 10rem 3rem;
   grid-template-rows: 3rem 3rem;
   grid-template-areas:
     "reset title remove"
     "minus display plus";
-  
+
   background-color: #FFFFFF;
   border-radius: 5px;
 
@@ -95,7 +95,7 @@ body {
     background-color: #252525;
     color: #FFFFFF;
   }
-  
+
   &:focus-visible, &:focus-within:has(*:focus-visible) {
     outline: -webkit-focus-ring-color auto 1px;
   }
@@ -123,19 +123,19 @@ body {
 
     &:focus {
       box-shadow: inset 0 -1px color-mix(in srgb, currentColor 50%, #FFFFFF);
-      
+
       &::placeholder {
         color: color-mix(in srgb, currentColor 50%, #FFFFFF);
       }
     }
   }
-  
+
   > svg {
     width: auto;
     flex-shrink: 0;
     stroke: color-mix(in srgb, currentColor 50%, #FFFFFF);
   }
-  
+
   &:focus-within > svg {
     display: none;
   }
