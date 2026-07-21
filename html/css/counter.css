@@ -24,6 +24,17 @@
   }
 }
 
+#counter-board > .placeholder {
+  display: none;
+  background-color: #252525;
+  border-radius: 5px;
+  opacity: 20%;
+
+  &:has(~ .counter[data-dragging]) {
+    display: block;
+  }
+}
+
 #counter-board > .counter {
   display: grid;
   padding: 5px;
