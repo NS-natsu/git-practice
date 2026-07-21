@@ -109,12 +109,12 @@ document.querySelector("main").appendChild(createCounterElement());
 
 // 2. メインの関数(次に書く)
 function createCounterElement() {
-    const counter = ...;
-    setupCounterButtonBehavior(counter); // 下の関数を呼び出す
-    return counter;
+  const counter = ...;
+  setupCounterButtonBehavior(counter); // 下の関数を呼び出す
+  return counter;
 }
 
 // 3. 末端の補助関数(下に書く)
 function setupCounterButtonBehavior(counter) {
-    ...
+  ...
 }

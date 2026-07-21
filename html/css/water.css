@@ -29,7 +29,7 @@
         rgba(45,120,220,.70)
       );
   }
-  
+
   &::after {
     content: "";
     position: absolute;

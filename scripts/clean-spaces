@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# 隠しファイル・フォルダ以外から、スペースのみの行のスペースを排除
+find . -type f -not -path '*/.*' \
+  -exec grep -lIEZ "^ +$" {} + | xargs -0 -r sed -Ei "s/^ +$//g"
+
+
+# 隠しファイル・フォルダ・md以外から、行末のスペースを排除
+find . -type f -not -path '*/.*' -not -name '*.md' \
+  -exec grep -lIEZ "^(.*[^ ]) +$" {} + | xargs -0 -r sed -Ei "s/^(.*[^ ]) +$/\1/g"
+
+cd - >/dev/null
