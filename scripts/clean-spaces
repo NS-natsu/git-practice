@@ -3,9 +3,13 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-grep -lIREZ --exclude=".*" --exclude-dir=".*" "^ +$" | xargs -0 sed -Ei "s/^ +$//g"
+# 隠しファイル・フォルダ以外から、スペースのみの行のスペースを排除
+find . -type f -not -path '*/.*' \
+  -exec grep -lIEZ "^ +$" {} + | xargs -0 -r sed -Ei "s/^ +$//g"
 
-find . -type f ! -path '.*/*' ! -name '.*' ! -name '*.md'
-grep -lIREZ --exclude=".*" --exclude="*.md" --exclude-dir=".*" "^(.*[^ ]) +$" | xargs -0 sed -Ei "s/^(.*[^ ]) +$/\1/g"
+
+# 隠しファイル・フォルダ・md以外から、行末のスペースを排除
+find . -type f -not -path '*/.*' -not -name '*.md' \
+  -exec grep -lIEZ "^(.*[^ ]) +$" {} + | xargs -0 -r sed -Ei "s/^(.*[^ ]) +$/\1/g"
 
 cd - >/dev/null
