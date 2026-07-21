@@ -23,12 +23,12 @@ Gitの練習をするためのプロジェクト。
 
 1. インデントのみ存在する行から、インデントをなくす  
 ```bash
-cd git-practice
-grep -lIREZ --exclude=".*" --exclude-dir=".*" "^ +$" | xargs -0 sed -Ei "s/^ +$//g"
+find git-practice -type f -not -path '*/.*' \
+  -exec grep -lIEZ "^ +$" {} + | xargs -0 -r sed -Ei "s/^ +$//g"
 ```
 
 2. 行末のスペースをなくす(mdファイルでは意味のある情報のため除外)  
 ```bash
-cd git-practice
-grep -lIREZ --exclude=".*" --exclude="*.md" --exclude-dir=".*" "^(.*[^ ]) +$" | xargs -0 sed -Ei "s/^(.*[^ ]) +$/\1/g"
+find git-practice -type f -not -path '*/.*' -not -name '*.md' \
+  -exec grep -lIEZ "^(.*[^ ]) +$" {} + | xargs -0 -r sed -Ei "s/^(.*[^ ]) +$/\1/g"
 ```
