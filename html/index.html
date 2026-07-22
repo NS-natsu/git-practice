@@ -13,9 +13,10 @@
   <body>
     <header></header>
     <main>
-      <div class="water">
-        <div class="waterSurface"></div>
-        <div class="underwater">
+      <!-- 背景・装飾層（IDでレイヤー識別しつつ、クラスでスタイル適用） -->
+      <div class="backdrop" id="water">
+        <div id="surface"></div>
+        <div id="under">
           <span class="bubble"></span>
           <span class="bubble"></span>
           <span class="bubble"></span>
@@ -23,6 +24,13 @@
           <span class="bubble"></span>
         </div>
       </div>
+
+      <!-- カウンターを格納するコンテナ -->
+      <div class="container">
+        <button id="add-counter" type="button" tabindex="-1">+</button>
+      </div>
+
+      <!-- カウンター要素のテンプレート -->
       <template id="counter-template">
         <div class="counter" tabindex="0">
           <button class="reset" type="button">
@@ -38,9 +46,6 @@
           <button class="plus" type="button" tabindex="-1">+</button>
         </div>
       </template>
-      <button id="add-counter" type="button">
-        +
-      </button>
     </main>
     <footer>Ⓒ 2026 SUZUKI YOKUTOKU</footer>
   </body>

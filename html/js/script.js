@@ -2,7 +2,7 @@
 
 /** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
-document.querySelector("main").appendChild(createCounterElement());
+document.querySelector(".container").appendChild(createCounterElement());
 
 document.querySelector("main").addEventListener("focus", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
@@ -50,7 +50,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
 });
 
 document.querySelector("#add-counter").addEventListener("click", (e) => {
-  document.querySelector("main").appendChild(createCounterElement());
+  document.querySelector(".container").appendChild(createCounterElement());
 });
 
 /**

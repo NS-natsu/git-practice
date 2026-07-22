@@ -30,6 +30,9 @@ body {
     z-index: 0;
     flex-grow: 1;
     background-color: #D9D9D9;
+
+    .backdrop { position: absolute; }
+    .container { position: relative; }
   }
 
   header {
@@ -52,7 +55,6 @@ body {
 
 .counter {
   display: grid;
-  position: relative;
   padding: 5px;
   width: fit-content;
   gap: 5px;

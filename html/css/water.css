@@ -1,8 +1,7 @@
-.water{
+#water{
   --water-level: 0%;
 
   display: flex;
-  position: absolute;
   inset: auto 0 0 0;
   height: var(--water-level);
   flex-direction: column;
@@ -42,7 +41,7 @@
       );
   }
 
-  .waterSurface{
+  #surface{
     position: relative;
     width: max(200%, 120px);
     height: 12px;
@@ -67,7 +66,7 @@
     }
   }
 
-  .underwater{
+  #under{
     position: relative;
     overflow: hidden;
     inset: 0;
