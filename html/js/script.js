@@ -3,6 +3,8 @@
 /** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
 
+document.querySelector("#counter-board").addEventListener("pointerdown", onDragStart);
+
 document.querySelector("main").addEventListener("focus", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
   e.target.dataset["beforeTitle"] = e.target.value;
@@ -17,7 +19,7 @@ document.querySelector("main").addEventListener("blur", (e) => {
 
 document.querySelector("main").addEventListener("keydown", (e) => {
   const counter = e.target.closest(".counter");
-  if (!counter) return;
+  if (!counter || counter.hasAttribute('data-dragging')) return;
 
   // title編集時操作定義
   if (e.target.matches(".title > input")) {
