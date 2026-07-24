@@ -3,6 +3,24 @@
 /** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
 
+window.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector("#counter-board");
+  const anchorNode = document.querySelector("#add-counter");
+  JSON.parse(localStorage.getItem("counterState")).forEach(({ title, count }) => {
+    container.insertBefore(createCounterElement(title, count), anchorNode);
+  });
+});
+
+window.addEventListener("pagehide", () => {
+  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
+    const title = elm.querySelector(".title input").value;
+    const count = elm.querySelector("input.display").valueAsNumber;
+    return { title, count }
+  });
+
+  localStorage.setItem("counterState", JSON.stringify(counters));
+});
+
 document.querySelector("#counter-board").addEventListener("pointerdown", onDragStart);
 
 document.querySelector("main").addEventListener("focus", (e) => {
@@ -65,9 +83,11 @@ document.querySelector("#delete-all-counters").addEventListener("click", (e) => 
 /**
  * JSDocつけてみる
  * イベントハンドラが設定済みのカウンター要素を生成して返す
+ * @param {string} initTitle カウンターのタイトル
+ * @param {number} initCount カウンターの値
  * @returns {HTMLDivElement} セットアップ済みのカウンター要素
  */
-function createCounterElement() {
+function createCounterElement(initTitle = "", initCount = 0) {
   const template = document.querySelector("template#counter-template");
   if (!template) {
     // エラーハンドリングもやってみる
@@ -78,6 +98,13 @@ function createCounterElement() {
   const counter = template.content.cloneNode(true).querySelector("div.counter");
   if (!counter) {
     throw new DOMException("テンプレート内に子要素（div.counter）が存在しません。", "NotFoundError")
+  }
+
+  if (initTitle) {
+    counter.querySelector(".title input").value = initTitle;
+  }
+  if (initCount) {
+    counter.querySelector("input.display").value = initCount;
   }
 
   setupCounterButtonBehavior(counter);
