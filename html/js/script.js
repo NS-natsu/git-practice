@@ -53,6 +53,13 @@ document.querySelector("#add-counter").addEventListener("click", (e) => {
   document.querySelector("main").appendChild(createCounterElement());
 });
 
+document.querySelector("#delete-all-counters").addEventListener("click", (e) => {
+  document.querySelectorAll(".counter").forEach((counter) => {
+    counter.remove();
+    counters.delete(counter);
+  });
+});
+
 /**
  * JSDocつけてみる
  * イベントハンドラが設定済みのカウンター要素を生成して返す
