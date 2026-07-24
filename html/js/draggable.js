@@ -42,10 +42,9 @@ function onDragStart(event) {
     placeholder.style.order = insertOrder;
   };
 
+  const controller = new AbortController();
   const onDragEnd = ({ type: eventType }) => {
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointercancel", onDragEnd);
-    window.removeEventListener("pointerup", onDragEnd);
+    controller.abort();
 
     if (eventType === "pointerup") {
       container.insertBefore(dragTarget, otherCounters[insertOrder] ?? anchorNode);
@@ -61,9 +60,9 @@ function onDragStart(event) {
   }
 
   // ドラッグ終了時のイベント定義
-  window.addEventListener("pointerup", onDragEnd, { once: true });
-  window.addEventListener("pointercancel", onDragEnd, { once: true });
-  window.addEventListener("pointermove", onPointerMove);
+  window.addEventListener("pointerup", onDragEnd, { signal: controller.signal });
+  window.addEventListener("pointercancel", onDragEnd, { signal: controller.signal });
+  window.addEventListener("pointermove", onPointerMove, { signal: controller.signal });
 }
 
 /**
