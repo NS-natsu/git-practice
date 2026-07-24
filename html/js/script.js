@@ -4,9 +4,11 @@
 const counters = new WeakSet();
 
 window.addEventListener("DOMContentLoaded", () => {
+  const counterStates = JSON.parse(localStorage.getItem("counterState"));
+  if (!counterStates) return;
   const container = document.querySelector("#counter-board");
   const anchorNode = document.querySelector("#add-counter");
-  JSON.parse(localStorage.getItem("counterState")).forEach(({ title, count }) => {
+  counterStates.forEach(({ title, count }) => {
     container.insertBefore(createCounterElement(title, count), anchorNode);
   });
 });
