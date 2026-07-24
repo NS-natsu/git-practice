@@ -50,6 +50,7 @@ body {
       color: #252525;
       font-size: 1rem;
       line-height: 1.5;
+      
       &:focus-visible {
         outline: -webkit-focus-ring-color auto;
       }

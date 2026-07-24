@@ -53,8 +53,11 @@ document.querySelector("#add-counter").addEventListener("click", (e) => {
   document.querySelector("main").appendChild(createCounterElement());
 });
 
-document.querySelector("header>button").addEventListener("click", (e) => {
-    document.querySelectorAll("main>.counter").forEach((counter) => counter.remove());
+document.querySelector("#delete-all-counters").addEventListener("click", (e) => {
+  document.querySelectorAll(".counter").forEach((counter) => {
+    counter.remove();
+    counters.delete(counter);
+  });
 });
 
 /**
