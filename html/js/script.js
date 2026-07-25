@@ -3,6 +3,21 @@
 /** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
 
+document.addEventListener("DOMContentLoaded", () => {
+  const counterStates = JSON.parse(localStorage.getItem("counterState"));
+  if (!counterStates) return;
+  const container = document.querySelector("#counter-board");
+  const anchorNode = document.querySelector("#add-counter");
+  counterStates.forEach(({ title, count }) => {
+    container.insertBefore(createCounterElement(title, count), anchorNode);
+  });
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "hidden") return;
+  saveWorkspace();
+});
+
 document.querySelector("#counter-board").addEventListener("pointerdown", onDragStart);
 
 document.querySelector("main").addEventListener("focus", (e) => {
@@ -13,8 +28,7 @@ document.querySelector("main").addEventListener("focus", (e) => {
 document.querySelector("main").addEventListener("blur", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
   delete e.target.dataset["beforeTitle"];
-  // TODO: titleの更新の適応
-  const title = e.target.value || e.target.placeholder;
+  saveWorkspace();
 }, { capture: true });
 
 document.querySelector("main").addEventListener("keydown", (e) => {
@@ -62,12 +76,24 @@ document.querySelector("#delete-all-counters").addEventListener("click", (e) => 
   });
 });
 
+function saveWorkspace() {
+  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
+    const title = elm.querySelector(".title input").value;
+    const count = elm.querySelector("input.display").valueAsNumber;
+    return { title, count }
+  });
+
+  localStorage.setItem("counterState", JSON.stringify(counters));
+}
+
 /**
  * JSDocつけてみる
  * イベントハンドラが設定済みのカウンター要素を生成して返す
+ * @param {string} initTitle カウンターのタイトル
+ * @param {number} initCount カウンターの値
  * @returns {HTMLDivElement} セットアップ済みのカウンター要素
  */
-function createCounterElement() {
+function createCounterElement(initTitle = "", initCount = 0) {
   const template = document.querySelector("template#counter-template");
   if (!template) {
     // エラーハンドリングもやってみる
@@ -78,6 +104,13 @@ function createCounterElement() {
   const counter = template.content.cloneNode(true).querySelector("div.counter");
   if (!counter) {
     throw new DOMException("テンプレート内に子要素（div.counter）が存在しません。", "NotFoundError")
+  }
+
+  if (initTitle) {
+    counter.querySelector(".title input").value = initTitle;
+  }
+  if (initCount) {
+    counter.querySelector("input.display").value = initCount;
   }
 
   setupCounterButtonBehavior(counter);
@@ -116,6 +149,7 @@ function setupCounterButtonBehavior(counter) {
         display.valueAsNumber = 0;
       }
 
+      saveWorkspace();
       counter.focus({ focusVisible: true });
     }
   });
