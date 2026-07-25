@@ -3,7 +3,7 @@
 /** @type {WeakSet<HTMLDivElement>} */
 const counters = new WeakSet();
 
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const counterStates = JSON.parse(localStorage.getItem("counterState"));
   if (!counterStates) return;
   const container = document.querySelector("#counter-board");
@@ -13,14 +13,9 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-window.addEventListener("pagehide", () => {
-  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
-    const title = elm.querySelector(".title input").value;
-    const count = elm.querySelector("input.display").valueAsNumber;
-    return { title, count }
-  });
-
-  localStorage.setItem("counterState", JSON.stringify(counters));
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "hidden") return;
+  saveWorkspace();
 });
 
 document.querySelector("#counter-board").addEventListener("pointerdown", onDragStart);
@@ -33,8 +28,7 @@ document.querySelector("main").addEventListener("focus", (e) => {
 document.querySelector("main").addEventListener("blur", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
   delete e.target.dataset["beforeTitle"];
-  // TODO: titleの更新の適応
-  const title = e.target.value || e.target.placeholder;
+  saveWorkspace();
 }, { capture: true });
 
 document.querySelector("main").addEventListener("keydown", (e) => {
@@ -81,6 +75,16 @@ document.querySelector("#delete-all-counters").addEventListener("click", (e) => 
     counters.delete(counter);
   });
 });
+
+function saveWorkspace() {
+  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
+    const title = elm.querySelector(".title input").value;
+    const count = elm.querySelector("input.display").valueAsNumber;
+    return { title, count }
+  });
+
+  localStorage.setItem("counterState", JSON.stringify(counters));
+}
 
 /**
  * JSDocつけてみる
@@ -145,6 +149,7 @@ function setupCounterButtonBehavior(counter) {
         display.valueAsNumber = 0;
       }
 
+      saveWorkspace();
       counter.focus({ focusVisible: true });
     }
   });
