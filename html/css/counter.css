@@ -48,6 +48,16 @@
   padding: 5px;
   background-color: #FFFFFF;
 
+  &:focus-visible, &:focus-within:has(*:focus-visible) {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+
+  &[data-dragging] {
+    position: absolute;
+    z-index: 1;
+    filter: contrast(90%);
+  }
+
   button {
     display: flex;
     justify-content: center;
@@ -88,22 +98,16 @@
     
     &:active { cursor: grabbing; }
   }
-
-  &[data-dragging] {
-    position: absolute;
-    z-index: 1;
-    filter: contrast(90%);
-  }
-
-  &:focus-visible, &:focus-within:has(*:focus-visible) {
-    outline: -webkit-focus-ring-color auto 1px;
-  }
 }
 
 #counter-board > .counter > .title {
   display: flex;
   gap: 0.25em;
   margin: auto 0.25em;
+
+  &:focus-within > svg {
+    display: none;
+  }
 
   > * {
     height: 1lh;
@@ -129,9 +133,5 @@
     flex-shrink: 0;
     width: auto;
     stroke: color-mix(in srgb, currentColor 50%, #FFFFFF);
-  }
-
-  &:focus-within > svg {
-    display: none;
   }
 }
