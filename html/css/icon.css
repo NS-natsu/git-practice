@@ -1,14 +1,14 @@
 header {
   position: relative;
   background: left / auto 100% no-repeat;
-  transform-origin: center;
   background-image: url("../icon/squirrel.svg");
+  transform-origin: center;
 }
 
 main {
   background: center / 25% auto no-repeat;
-  transform-origin: center;
   background-image: url("../icon/beaver.svg");
+  transform-origin: center;
   animation:
     beaverMoveX 10s linear infinite,
     beaverMoveY 10s linear infinite;
