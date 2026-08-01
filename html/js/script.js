@@ -22,6 +22,14 @@ document.addEventListener("visibilitychange", () => {
   localStorage.setItem("counterState", JSON.stringify(counters));
 });
 
+document.addEventListener("click", (e) => {
+  const button = e.target.closest("button");
+  if (!button) return;
+
+  if (button.closest("header")) handleHeaderButtonClick(button);
+  else if (button.closest("main")) handleMainButtonClick(button);
+});
+
 counterBoard.addEventListener("pointerdown", onDragStart);
 
 counterBoard.addEventListener("focus", (e) => {
@@ -67,10 +75,43 @@ counterBoard.addEventListener("keydown", (e) => {
   }
 });
 
-counterBoard.addEventListener("click", (e) => {
-  const button = e.target.closest("button");
-  if (!button) return;
+/**
+ * JSDocつけてみる
+ * イベントハンドラが設定済みのカウンター要素を生成して返す
+ * @param {string} initTitle カウンターのタイトル
+ * @param {number} initCount カウンターの値
+ * @returns {HTMLDivElement} セットアップ済みのカウンター要素
+ */
+function createCounterElement(initTitle = "", initCount = 0) {
+  const template = document.querySelector("template#counter-template");
+  if (!template) {
+    // エラーハンドリングもやってみる
+    throw new ReferenceError("HTML内に '#counter-template' が見つかりません。");
+  }
 
+  /** @type {HTMLDivElement | null} */
+  const counter = template.content.cloneNode(true).querySelector("div.counter");
+  if (!counter) {
+    throw new DOMException("テンプレート内に子要素（div.counter）が存在しません。", "NotFoundError")
+  }
+
+  if (initTitle) {
+    counter.querySelector(".title input").value = initTitle;
+  }
+  if (initCount) {
+    counter.querySelector("input.display").value = initCount;
+  }
+
+  return counter;
+}
+
+function handleHeaderButtonClick(button) {
+  if (button.matches("#delete-all-counters")) {
+    document.querySelectorAll(".counter").forEach((counter) => counter.remove());
+  }
+}
+
+function handleMainButtonClick(button) {
   if (button.matches("#add-counter")) {
     counterBoard.insertBefore(createCounterElement(), button);
     return;
@@ -101,41 +142,4 @@ counterBoard.addEventListener("click", (e) => {
 
     counter.focus({ focusVisible: true });
   }
-});
-
-document.querySelector("#delete-all-counters").addEventListener("click", (e) => {
-  document.querySelectorAll(".counter").forEach((counter) => {
-    counter.remove();
-    counters.delete(counter);
-  });
-});
-
-/**
- * JSDocつけてみる
- * イベントハンドラが設定済みのカウンター要素を生成して返す
- * @param {string} initTitle カウンターのタイトル
- * @param {number} initCount カウンターの値
- * @returns {HTMLDivElement} セットアップ済みのカウンター要素
- */
-function createCounterElement(initTitle = "", initCount = 0) {
-  const template = document.querySelector("template#counter-template");
-  if (!template) {
-    // エラーハンドリングもやってみる
-    throw new ReferenceError("HTML内に '#counter-template' が見つかりません。");
-  }
-
-  /** @type {HTMLDivElement | null} */
-  const counter = template.content.cloneNode(true).querySelector("div.counter");
-  if (!counter) {
-    throw new DOMException("テンプレート内に子要素（div.counter）が存在しません。", "NotFoundError")
-  }
-
-  if (initTitle) {
-    counter.querySelector(".title input").value = initTitle;
-  }
-  if (initCount) {
-    counter.querySelector("input.display").value = initCount;
-  }
-
-  return counter;
 }
