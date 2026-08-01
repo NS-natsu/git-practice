@@ -91,8 +91,8 @@ function getOrderDelta(dragItem, referenceItem, gridContainer) {
   const trackWidth = referenceItem.offsetWidth + columnGap;
   const trackHeight = referenceItem.offsetHeight + rowGap;
 
-  const maxColumns = Math.max(1, Math.floor((gridContainer.offsetWidth + columnGap) / trackWidth));
-  const maxRows = Math.max(1, Math.floor((gridContainer.offsetHeight + rowGap) / trackHeight));
+  const maxColumns = containerStyle.gridTemplateColumns.split(' ').length;
+  const maxRows = containerStyle.gridTemplateRows.split(' ').length;
 
   const baseRow = Math.floor(referenceItem.offsetTop / trackHeight);
   const baseColumn = Math.floor(referenceItem.offsetLeft / trackWidth);
