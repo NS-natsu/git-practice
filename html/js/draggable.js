@@ -60,9 +60,9 @@ function onDragStart(event) {
   }
 
   // ドラッグ終了時のイベント定義
-  window.addEventListener("pointerup", onDragEnd, { signal: controller.signal });
-  window.addEventListener("pointercancel", onDragEnd, { signal: controller.signal });
-  window.addEventListener("pointermove", onPointerMove, { signal: controller.signal });
+  document.addEventListener("pointerup", onDragEnd, { signal: controller.signal });
+  document.addEventListener("pointercancel", onDragEnd, { signal: controller.signal });
+  document.addEventListener("pointermove", onPointerMove, { signal: controller.signal });
 }
 
 /**
