@@ -7,13 +7,33 @@
     <link rel="icon" href="./icon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./css/layout.css" type="text/css">
     <link rel="stylesheet" href="./css/counter.css" type="text/css">
+    <link rel="stylesheet" href="./css/preset.css" type="text/css">
     <link rel="stylesheet" href="./css/icon.css" type="text/css">
     <script src="./js/draggable.js"></script>
     <script src="./js/script.js" defer></script>
   </head>
   <body>
     <header>
+      <div id="preset-area">
+        <button id="preset-toggle-button" popovertarget="preset-board" type="button">
+          プリセット
+        </button>
+
+        <div class="sortable" id="preset-board" popover>
+          <div class="placeholder"></div>
+          <button data-anchor id="add-preset" type="button" tabindex="-1">+</button>
+        </div>
+      </div>
       <button id="delete-all-counters" type="button">すべてのカウンターを削除</button>
+
+      <!-- プリセット要素のテンプレート -->
+      <template id="preset-template">
+        <div class="draggable preset">
+          <div class="drag-handle"></div>
+          <button class="title" type="button" popovertarget="preset-board" popovertargetaction="hide" tabindex="-1">preset</button>
+          <button class="remove" type="button" tabindex="-1">×</button>
+        </div>
+      </template>
     </header>
     <main>
       <!-- カウンターを格納するコンテナ -->
