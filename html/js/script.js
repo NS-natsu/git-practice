@@ -13,7 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "hidden") return;
-  saveWorkspace();
+  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
+    const title = elm.querySelector(".title input").value;
+    const count = elm.querySelector("input.display").valueAsNumber;
+    return { title, count }
+  });
+
+  localStorage.setItem("counterState", JSON.stringify(counters));
 });
 
 counterBoard.addEventListener("pointerdown", onDragStart);
@@ -26,7 +32,6 @@ counterBoard.addEventListener("focus", (e) => {
 counterBoard.addEventListener("blur", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
   delete e.target.dataset["beforeTitle"];
-  saveWorkspace();
 }, { capture: true });
 
 counterBoard.addEventListener("keydown", (e) => {
@@ -94,7 +99,6 @@ counterBoard.addEventListener("click", (e) => {
       display.valueAsNumber = 0;
     }
 
-    saveWorkspace();
     counter.focus({ focusVisible: true });
   }
 });
@@ -134,14 +138,4 @@ function createCounterElement(initTitle = "", initCount = 0) {
   }
 
   return counter;
-}
-
-function saveWorkspace() {
-  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
-    const title = elm.querySelector(".title input").value;
-    const count = elm.querySelector("input.display").valueAsNumber;
-    return { title, count }
-  });
-
-  localStorage.setItem("counterState", JSON.stringify(counters));
 }

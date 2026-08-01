@@ -36,7 +36,7 @@ function onDragStart(event) {
     dragTarget.style.top = `${dragTarget.offsetTop + movementY}px`;
     dragTarget.style.left = `${dragTarget.offsetLeft + movementX}px`;
 
-    const delta = getSlotDelta(dragTarget, placeholder, container);
+    const delta = getOrderDelta(dragTarget, placeholder, container);
     insertOrder = clampNumber(insertOrder + delta, 0, otherCounters.length);
 
     placeholder.style.order = insertOrder;
@@ -71,28 +71,28 @@ function onDragStart(event) {
  * @param {HTMLDivElement} container
  * @returns {number}
  */
-function getSlotDelta(dragElm, baseElm, container) {
+function getOrderDelta(dragElm, baseElm, container) {
   const containerStyle = getComputedStyle(container);
 
   const rowGap = parseFloat(containerStyle.rowGap) || 0;
   const columnGap = parseFloat(containerStyle.columnGap) || 0;
 
-  const slotWidth = baseElm.offsetWidth + columnGap;
-  const slotHeight = baseElm.offsetHeight + rowGap;
+  const trackWidth = baseElm.offsetWidth + columnGap;
+  const trackHeight = baseElm.offsetHeight + rowGap;
 
-  const maxColumns = Math.max(1, Math.floor((container.offsetWidth + columnGap) / slotWidth));
-  const maxRows = Math.max(1, Math.floor((container.offsetHeight + rowGap) / slotHeight));
+  const maxColumns = Math.max(1, Math.floor((container.offsetWidth + columnGap) / trackWidth));
+  const maxRows = Math.max(1, Math.floor((container.offsetHeight + rowGap) / trackHeight));
 
-  const baseRow = Math.floor(baseElm.offsetTop / slotHeight);
-  const baseColumn = Math.floor(baseElm.offsetLeft / slotWidth);
+  const baseRow = Math.floor(baseElm.offsetTop / trackHeight);
+  const baseColumn = Math.floor(baseElm.offsetLeft / trackWidth);
 
   const columnDelta = clampNumber(
-    Math.round((dragElm.offsetLeft - baseElm.offsetLeft) / slotWidth),
+    Math.round((dragElm.offsetLeft - baseElm.offsetLeft) / trackWidth),
     -baseColumn,
     maxColumns - baseColumn - 1
   );
   const rowDelta = clampNumber(
-    Math.round((dragElm.offsetTop - baseElm.offsetTop) / slotHeight),
+    Math.round((dragElm.offsetTop - baseElm.offsetTop) / trackHeight),
     -baseRow,
     maxRows - baseRow - 1
   );
