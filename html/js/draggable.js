@@ -1,11 +1,19 @@
 "use strict";
 
+function enableDragSort() {
+  document.addEventListener("pointerdown", onDragStart, { capture: true });
+}
+
+function disableDragSort() {
+  document.removeEventListener("pointerdown", onDragStart);
+}
+
 /**
  * ドラッグ開始時のイベントハンドラ
  * @param {PointerEvent} event
  */
 function onDragStart(event) {
-  const container = event.currentTarget;
+  const container = event.target.closest(".sortable");
   if (!container || !event.target?.matches?.(".drag-handle")) {
     return;
   }
@@ -17,7 +25,8 @@ function onDragStart(event) {
   }
 
   // ドラッグ中は多重発火防止のためハンドラを無効化する
-  container.removeEventListener(event.type, onDragStart);
+  disableDragSort();
+  event.stopPropagation();
 
   const dragTarget = event.target.closest(".draggable");
   const insertAnchor = container.querySelector("[data-anchor]");
@@ -66,7 +75,7 @@ function onDragStart(event) {
     dragTarget.toggleAttribute('data-dragging', false);
     dragTarget.focus({ focusVisible: true });
 
-    container.addEventListener(event.type, onDragStart);
+    enableDragSort();
   }
 
   // ドラッグ終了時のイベント定義

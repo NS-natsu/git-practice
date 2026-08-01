@@ -31,7 +31,8 @@ document.addEventListener("click", (e) => {
   else if (button.closest("main")) handleMainButtonClick(button);
 });
 
-counterBoard.addEventListener("pointerdown", onDragStart);
+// drag機能の有効化
+enableDragSort();
 
 counterBoard.addEventListener("focus", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
