@@ -10,11 +10,16 @@ function onDragStart(event) {
     return;
   }
 
+  // placeholderがないと置換できないため先にチェック
+  const placeholder = container.querySelector(".placeholder");
+  if (!placeholder) {
+    return;
+  }
+
   // ドラッグ中は多重発火防止のためハンドラを無効化する
   container.removeEventListener(event.type, onDragStart);
 
   const dragTarget = event.target.closest(".draggable");
-  const placeholder = container.querySelector(".placeholder");
   const insertAnchor = container.querySelector("[data-anchor]");
 
   // ドラッグ対象を除いた並びで再配置するため、先に元の位置を取得してから除外する
@@ -31,7 +36,9 @@ function onDragStart(event) {
     counter.style.order = index;
   });
   placeholder.style.order = insertOrder;
-  insertAnchor.style.order = otherDraggables.length;
+  if (insertAnchor) {
+    insertAnchor.style.order = otherDraggables.length;
+  }
 
   /** @param {PointerEvent} */
   const onPointerMove = ({ movementX, movementY }) => {
