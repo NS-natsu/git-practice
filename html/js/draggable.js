@@ -66,16 +66,6 @@ function onDragStart(event) {
 }
 
 /**
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @returns {number}
- */
-function clampNumber(value, min = -Infinity, max = Infinity) {
-  return Math.min(max, Math.max(min, value));
-}
-
-/**
  * @param {HTMLDivElement} dragElm
  * @param {HTMLDivElement} baseElm
  * @param {HTMLDivElement} container
@@ -108,4 +98,14 @@ function getSlotDelta(dragElm, baseElm, container) {
   );
 
   return maxColumns * rowDelta + columnDelta;
+}
+
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+function clampNumber(value, min = -Infinity, max = Infinity) {
+  return Math.min(max, Math.max(min, value));
 }
