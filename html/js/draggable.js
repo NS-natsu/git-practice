@@ -6,32 +6,32 @@
  */
 function onDragStart(event) {
   const container = event.currentTarget;
-  if (!container || !event.target?.matches?.(".dragger")) {
+  if (!container || !event.target?.matches?.(".drag-handle")) {
     return;
   }
 
   // ドラッグ中は多重発火防止のためハンドラを無効化する
   container.removeEventListener(event.type, onDragStart);
 
-  const dragTarget = event.target.closest(".counter");
+  const dragTarget = event.target.closest(".draggable");
   const placeholder = container.querySelector(".placeholder");
-  const insertAnchor = container.querySelector("#add-counter");
+  const insertAnchor = container.querySelector("[data-anchor]");
 
   // ドラッグ対象を除いた並びで再配置するため、先に元の位置を取得してから除外する
-  const otherCounters = Array.from(container.querySelectorAll(".counter"));
-  let insertOrder = otherCounters.indexOf(dragTarget);
-  otherCounters.splice(insertOrder, 1);
+  const otherDraggables = Array.from(container.querySelectorAll(".draggable"));
+  let insertOrder = otherDraggables.indexOf(dragTarget);
+  otherDraggables.splice(insertOrder, 1);
 
   // 移動可能なことがわかるように少しずらす
   dragTarget.style.left = `${dragTarget.offsetLeft - 5}px`;
   dragTarget.style.top = `${dragTarget.offsetTop - 5}px`;
   dragTarget.toggleAttribute('data-dragging', true);
 
-  otherCounters.forEach((counter, index) => {
+  otherDraggables.forEach((counter, index) => {
     counter.style.order = index;
   });
   placeholder.style.order = insertOrder;
-  insertAnchor.style.order = otherCounters.length;
+  insertAnchor.style.order = otherDraggables.length;
 
   /** @param {PointerEvent} */
   const onPointerMove = ({ movementX, movementY }) => {
@@ -39,7 +39,7 @@ function onDragStart(event) {
     dragTarget.style.left = `${dragTarget.offsetLeft + movementX}px`;
 
     const orderDelta = getOrderDelta(dragTarget, placeholder, container);
-    insertOrder = clampNumber(insertOrder + orderDelta, 0, otherCounters.length);
+    insertOrder = clampNumber(insertOrder + orderDelta, 0, otherDraggables.length);
 
     placeholder.style.order = insertOrder;
   };
@@ -50,7 +50,7 @@ function onDragStart(event) {
     controller.abort();
 
     if (eventType === "pointerup") {
-      container.insertBefore(dragTarget, otherCounters[insertOrder] ?? insertAnchor);
+      container.insertBefore(dragTarget, otherDraggables[insertOrder] ?? insertAnchor);
     }
 
     for (const elm of container.children) {
