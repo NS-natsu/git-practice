@@ -19,7 +19,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 100svw;
-  height: 100svh;  
+  height: 100svh;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
