@@ -3,17 +3,16 @@
 
   display: flex;
   inset: auto 0 0 0;
-  height: var(--water-level);
   flex-direction: column;
+  height: var(--water-level);
   overflow: hidden;
-  pointer-events: none;
-
   background:
     linear-gradient(
       to bottom,
       transparent 6px,
       rgba(190, 67, 0, 0.571) 6px
     );
+  pointer-events: none;
 
   &::before {
     content: "";
@@ -49,12 +48,12 @@
 
     &::before, &::after {
       content: "";
+      position: absolute;
       left: -30px;
       width: 100%;
       height: 100%;
-      position: absolute;
-      background-size:60px 12px;
       background: url(../icon/wave.svg) repeat-x;
+      background-size:60px 12px;
       animation:
         surfaceMove 10s linear infinite,
         surfaceBob 3s ease-in-out infinite;
@@ -68,10 +67,10 @@
 
   #under{
     position: relative;
-    overflow: hidden;
     inset: 0;
-    flex-grow: 1;
     opacity: .5;
+    flex-grow: 1;
+    overflow: hidden;
     background:
       repeating-linear-gradient(
         -45deg,
@@ -79,41 +78,41 @@
         transparent 8px 30px
       );
     animation: flow 10s linear infinite;
+  }
+}
 
-    .bubble {
-      position: absolute;
-      bottom: -30px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: white;
-      animation: bubble 8s infinite;
+.bubble {
+  position: absolute;
+  bottom: -30px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+  animation: bubble 8s infinite;
 
-      &:nth-child(1) {
-        left:10%;
-        animation-delay:0s;
-      }
+  &:nth-child(1) {
+    left:10%;
+    animation-delay:0s;
+  }
 
-      &:nth-child(2){
-        left:35%;
-        animation-delay:2s;
-      }
+  &:nth-child(2){
+    left:35%;
+    animation-delay:2s;
+  }
 
-      &:nth-child(3){
-        left:55%;
-        animation-delay:4s;
-      }
+  &:nth-child(3){
+    left:55%;
+    animation-delay:4s;
+  }
 
-      &:nth-child(4){
-        left:75%;
-        animation-delay:1s;
-      }
+  &:nth-child(4){
+    left:75%;
+    animation-delay:1s;
+  }
 
-      &:nth-child(5){
-        left:90%;
-        animation-delay:6s;
-      }
-    }
+  &:nth-child(5){
+    left:90%;
+    animation-delay:6s;
   }
 }
 
