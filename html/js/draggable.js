@@ -15,8 +15,9 @@ function onDragStart(event) {
 
   const dragTarget = event.target.closest(".counter");
   const placeholder = container.querySelector(".placeholder");
-  const anchorNode = container.querySelector("#add-counter");
+  const insertAnchor = container.querySelector("#add-counter");
 
+  // ドラッグ対象を除いた並びで再配置するため、先に元の位置を取得してから除外する
   const otherCounters = Array.from(container.querySelectorAll(".counter"));
   let insertOrder = otherCounters.indexOf(dragTarget);
   otherCounters.splice(insertOrder, 1);
@@ -26,18 +27,18 @@ function onDragStart(event) {
   dragTarget.style.top = `${dragTarget.offsetTop - 5}px`;
   dragTarget.toggleAttribute('data-dragging', true);
 
-  otherCounters.forEach((item, idx) => {
-    item.style.order = idx;
+  otherCounters.forEach((counter, index) => {
+    counter.style.order = index;
   });
   placeholder.style.order = insertOrder;
-  anchorNode.style.order = otherCounters.length;
+  insertAnchor.style.order = otherCounters.length;
 
   const onPointerMove = ({ movementX, movementY }) => {
     dragTarget.style.top = `${dragTarget.offsetTop + movementY}px`;
     dragTarget.style.left = `${dragTarget.offsetLeft + movementX}px`;
 
-    const delta = getOrderDelta(dragTarget, placeholder, container);
-    insertOrder = clampNumber(insertOrder + delta, 0, otherCounters.length);
+    const orderDelta = getOrderDelta(dragTarget, placeholder, container);
+    insertOrder = clampNumber(insertOrder + orderDelta, 0, otherCounters.length);
 
     placeholder.style.order = insertOrder;
   };
@@ -47,7 +48,7 @@ function onDragStart(event) {
     controller.abort();
 
     if (eventType === "pointerup") {
-      container.insertBefore(dragTarget, otherCounters[insertOrder] ?? anchorNode);
+      container.insertBefore(dragTarget, otherCounters[insertOrder] ?? insertAnchor);
     }
 
     for (const elm of container.children) {
@@ -66,6 +67,7 @@ function onDragStart(event) {
 }
 
 /**
+ * ドラッグ要素と基準要素の位置差から、移動すべきスロット数を算出する
  * @param {HTMLDivElement} dragElm
  * @param {HTMLDivElement} baseElm
  * @param {HTMLDivElement} container

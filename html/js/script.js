@@ -3,23 +3,24 @@
 const counterBoard = document.querySelector("#counter-board");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const counterStates = JSON.parse(localStorage.getItem("counterState"));
+  const counterStates = JSON.parse(localStorage.getItem("counterStates"));
   if (!counterStates) return;
-  const anchor = document.querySelector("#add-counter");
+  const insertAnchor = document.querySelector("#add-counter");
   counterStates.forEach(({ title, count }) => {
-    counterBoard.insertBefore(createCounterElement(title, count), anchor);
+    counterBoard.insertBefore(createCounterElement(title, count), insertAnchor);
   });
 });
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "hidden") return;
-  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
-    const title = elm.querySelector(".title input").value;
-    const count = elm.querySelector("input.display").valueAsNumber;
-    return { title, count }
-  });
+  const counterStates = Array.from(document.querySelectorAll(".counter"))
+    .map((counterElm) => {
+      const title = counterElm.querySelector(".title input").value;
+      const count = counterElm.querySelector("input.display").valueAsNumber;
+      return { title, count }
+    });
 
-  localStorage.setItem("counterState", JSON.stringify(counters));
+  localStorage.setItem("counterStates", JSON.stringify(counterStates));
 });
 
 document.addEventListener("click", (e) => {
@@ -34,12 +35,12 @@ counterBoard.addEventListener("pointerdown", onDragStart);
 
 counterBoard.addEventListener("focus", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
-  e.target.dataset["beforeTitle"] = e.target.value;
+  e.target.dataset.previousTitle = e.target.value;
 }, { capture: true });
 
 counterBoard.addEventListener("blur", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
-  delete e.target.dataset["beforeTitle"];
+  delete e.target.dataset.previousTitle;
 }, { capture: true });
 
 counterBoard.addEventListener("keydown", (e) => {
@@ -50,7 +51,7 @@ counterBoard.addEventListener("keydown", (e) => {
   if (e.target.matches(".title > input")) {
     switch (e.key) {
       case "Escape":
-        e.target.value = e.target.dataset["beforeTitle"];
+        e.target.value = e.target.dataset.previousTitle;
         // fall through
       case "Enter":
         e.preventDefault();
@@ -130,7 +131,7 @@ function handleMainButtonClick(button) {
   }
 
   if (isPlus || isMinus || isReset) {
-    const display = counter.querySelector(".display");
+    const display = counter.querySelector("input.display");
 
     if (isPlus) {
       display.valueAsNumber++;
