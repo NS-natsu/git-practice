@@ -33,6 +33,7 @@ function onDragStart(event) {
   placeholder.style.order = insertOrder;
   insertAnchor.style.order = otherCounters.length;
 
+  /** @param {PointerEvent} */
   const onPointerMove = ({ movementX, movementY }) => {
     dragTarget.style.top = `${dragTarget.offsetTop + movementY}px`;
     dragTarget.style.left = `${dragTarget.offsetLeft + movementX}px`;
@@ -44,6 +45,7 @@ function onDragStart(event) {
   };
 
   const controller = new AbortController();
+  /** @param {PointerEvent} */
   const onDragEnd = ({ type: eventType }) => {
     controller.abort();
 
@@ -68,33 +70,33 @@ function onDragStart(event) {
 
 /**
  * ドラッグ要素と基準要素の位置差から、移動すべきスロット数を算出する
- * @param {HTMLDivElement} dragElm
- * @param {HTMLDivElement} baseElm
- * @param {HTMLDivElement} container
+ * @param {HTMLElement} dragItem
+ * @param {HTMLElement} referenceItem
+ * @param {HTMLElement} gridContainer
  * @returns {number}
  */
-function getOrderDelta(dragElm, baseElm, container) {
-  const containerStyle = getComputedStyle(container);
+function getOrderDelta(dragItem, referenceItem, gridContainer) {
+  const containerStyle = getComputedStyle(gridContainer);
 
   const rowGap = parseFloat(containerStyle.rowGap) || 0;
   const columnGap = parseFloat(containerStyle.columnGap) || 0;
 
-  const trackWidth = baseElm.offsetWidth + columnGap;
-  const trackHeight = baseElm.offsetHeight + rowGap;
+  const trackWidth = referenceItem.offsetWidth + columnGap;
+  const trackHeight = referenceItem.offsetHeight + rowGap;
 
-  const maxColumns = Math.max(1, Math.floor((container.offsetWidth + columnGap) / trackWidth));
-  const maxRows = Math.max(1, Math.floor((container.offsetHeight + rowGap) / trackHeight));
+  const maxColumns = Math.max(1, Math.floor((gridContainer.offsetWidth + columnGap) / trackWidth));
+  const maxRows = Math.max(1, Math.floor((gridContainer.offsetHeight + rowGap) / trackHeight));
 
-  const baseRow = Math.floor(baseElm.offsetTop / trackHeight);
-  const baseColumn = Math.floor(baseElm.offsetLeft / trackWidth);
+  const baseRow = Math.floor(referenceItem.offsetTop / trackHeight);
+  const baseColumn = Math.floor(referenceItem.offsetLeft / trackWidth);
 
   const columnDelta = clampNumber(
-    Math.round((dragElm.offsetLeft - baseElm.offsetLeft) / trackWidth),
+    Math.round((dragItem.offsetLeft - referenceItem.offsetLeft) / trackWidth),
     -baseColumn,
     maxColumns - baseColumn - 1
   );
   const rowDelta = clampNumber(
-    Math.round((dragElm.offsetTop - baseElm.offsetTop) / trackHeight),
+    Math.round((dragItem.offsetTop - referenceItem.offsetTop) / trackHeight),
     -baseRow,
     maxRows - baseRow - 1
   );
