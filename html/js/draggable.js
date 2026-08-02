@@ -15,8 +15,9 @@ function onDragStart(event) {
 
   const dragTarget = event.target.closest(".counter");
   const placeholder = container.querySelector(".placeholder");
-  const anchorNode = container.querySelector("#add-counter");
+  const insertAnchor = container.querySelector("#add-counter");
 
+  // ドラッグ対象を除いた並びで再配置するため、先に元の位置を取得してから除外する
   const otherCounters = Array.from(container.querySelectorAll(".counter"));
   let insertOrder = otherCounters.indexOf(dragTarget);
   otherCounters.splice(insertOrder, 1);
@@ -26,32 +27,34 @@ function onDragStart(event) {
   dragTarget.style.top = `${dragTarget.offsetTop - 5}px`;
   dragTarget.toggleAttribute('data-dragging', true);
 
-  otherCounters.forEach((item, idx) => {
-    item.style.order = idx;
+  otherCounters.forEach((counter, index) => {
+    counter.style.order = index;
   });
   placeholder.style.order = insertOrder;
-  anchorNode.style.order = otherCounters.length;
+  insertAnchor.style.order = otherCounters.length;
 
+  /** @param {PointerEvent} */
   const onPointerMove = ({ movementX, movementY }) => {
     dragTarget.style.top = `${dragTarget.offsetTop + movementY}px`;
     dragTarget.style.left = `${dragTarget.offsetLeft + movementX}px`;
 
-    const delta = getSlotDelta(dragTarget, placeholder, container);
-    insertOrder = clampNumber(insertOrder + delta, 0, otherCounters.length);
+    const orderDelta = getOrderDelta(dragTarget, placeholder, container);
+    insertOrder = clampNumber(insertOrder + orderDelta, 0, otherCounters.length);
 
     placeholder.style.order = insertOrder;
   };
 
   const controller = new AbortController();
+  /** @param {PointerEvent} */
   const onDragEnd = ({ type: eventType }) => {
     controller.abort();
 
     if (eventType === "pointerup") {
-      container.insertBefore(dragTarget, otherCounters[insertOrder] ?? anchorNode);
+      container.insertBefore(dragTarget, otherCounters[insertOrder] ?? insertAnchor);
     }
 
-    for (const elm of container.children) {
-      elm.removeAttribute("style");
+    for (const element of container.children) {
+      element.removeAttribute("style");
     }
     dragTarget.toggleAttribute('data-dragging', false);
     dragTarget.focus({ focusVisible: true });
@@ -60,9 +63,45 @@ function onDragStart(event) {
   }
 
   // ドラッグ終了時のイベント定義
-  window.addEventListener("pointerup", onDragEnd, { signal: controller.signal });
-  window.addEventListener("pointercancel", onDragEnd, { signal: controller.signal });
-  window.addEventListener("pointermove", onPointerMove, { signal: controller.signal });
+  document.addEventListener("pointerup", onDragEnd, { signal: controller.signal });
+  document.addEventListener("pointercancel", onDragEnd, { signal: controller.signal });
+  document.addEventListener("pointermove", onPointerMove, { signal: controller.signal });
+}
+
+/**
+ * ドラッグ要素と基準要素の位置差から、移動すべきスロット数を算出する
+ * @param {HTMLElement} dragItem
+ * @param {HTMLElement} referenceItem
+ * @param {HTMLElement} gridContainer
+ * @returns {number}
+ */
+function getOrderDelta(dragItem, referenceItem, gridContainer) {
+  const containerStyle = getComputedStyle(gridContainer);
+
+  const rowGap = parseFloat(containerStyle.rowGap) || 0;
+  const columnGap = parseFloat(containerStyle.columnGap) || 0;
+
+  const trackWidth = referenceItem.offsetWidth + columnGap;
+  const trackHeight = referenceItem.offsetHeight + rowGap;
+
+  const maxColumns = Math.max(1, Math.floor((gridContainer.offsetWidth + columnGap) / trackWidth));
+  const maxRows = Math.max(1, Math.floor((gridContainer.offsetHeight + rowGap) / trackHeight));
+
+  const baseRow = Math.floor(referenceItem.offsetTop / trackHeight);
+  const baseColumn = Math.floor(referenceItem.offsetLeft / trackWidth);
+
+  const columnDelta = clampNumber(
+    Math.round((dragItem.offsetLeft - referenceItem.offsetLeft) / trackWidth),
+    -baseColumn,
+    maxColumns - baseColumn - 1
+  );
+  const rowDelta = clampNumber(
+    Math.round((dragItem.offsetTop - referenceItem.offsetTop) / trackHeight),
+    -baseRow,
+    maxRows - baseRow - 1
+  );
+
+  return maxColumns * rowDelta + columnDelta;
 }
 
 /**
@@ -73,39 +112,4 @@ function onDragStart(event) {
  */
 function clampNumber(value, min = -Infinity, max = Infinity) {
   return Math.min(max, Math.max(min, value));
-}
-
-/**
- * @param {HTMLDivElement} dragElm
- * @param {HTMLDivElement} baseElm
- * @param {HTMLDivElement} container
- * @returns {number}
- */
-function getSlotDelta(dragElm, baseElm, container) {
-  const containerStyle = getComputedStyle(container);
-
-  const rowGap = parseFloat(containerStyle.rowGap) || 0;
-  const columnGap = parseFloat(containerStyle.columnGap) || 0;
-
-  const slotWidth = baseElm.offsetWidth + columnGap;
-  const slotHeight = baseElm.offsetHeight + rowGap;
-
-  const maxColumns = Math.max(1, Math.floor((container.offsetWidth + columnGap) / slotWidth));
-  const maxRows = Math.max(1, Math.floor((container.offsetHeight + rowGap) / slotHeight));
-
-  const baseRow = Math.floor(baseElm.offsetTop / slotHeight);
-  const baseColumn = Math.floor(baseElm.offsetLeft / slotWidth);
-
-  const columnDelta = clampNumber(
-    Math.round((dragElm.offsetLeft - baseElm.offsetLeft) / slotWidth),
-    -baseColumn,
-    maxColumns - baseColumn - 1
-  );
-  const rowDelta = clampNumber(
-    Math.round((dragElm.offsetTop - baseElm.offsetTop) / slotHeight),
-    -baseRow,
-    maxRows - baseRow - 1
-  );
-
-  return maxColumns * rowDelta + columnDelta;
 }

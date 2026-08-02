@@ -1,37 +1,49 @@
 "use strict";
 
-/** @type {WeakSet<HTMLDivElement>} */
-const counters = new WeakSet();
+const counterBoard = document.querySelector("#counter-board");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const counterStates = JSON.parse(localStorage.getItem("counterState"));
+  const counterStates = JSON.parse(localStorage.getItem("counterStates"));
   if (!counterStates) return;
-  const container = document.querySelector("#counter-board");
-  const anchorNode = document.querySelector("#add-counter");
+  const insertAnchor = document.querySelector("#add-counter");
   counterStates.forEach(({ title, count }) => {
-    container.insertBefore(createCounterElement(title, count), anchorNode);
+    counterBoard.insertBefore(createCounterElement(title, count), insertAnchor);
   });
 });
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "hidden") return;
-  saveWorkspace();
+  const counterStates = Array.from(document.querySelectorAll(".counter"))
+    .map((counterElm) => {
+      const title = counterElm.querySelector(".title input").value;
+      const count = counterElm.querySelector("input.display").valueAsNumber;
+      return { title, count }
+    });
+
+  localStorage.setItem("counterStates", JSON.stringify(counterStates));
 });
 
-document.querySelector("#counter-board").addEventListener("pointerdown", onDragStart);
+document.addEventListener("click", (e) => {
+  const button = e.target.closest("button");
+  if (!button) return;
 
-document.querySelector("main").addEventListener("focus", (e) => {
+  if (button.closest("header")) handleHeaderButtonClick(button);
+  else if (button.closest("main")) handleMainButtonClick(button);
+});
+
+counterBoard.addEventListener("pointerdown", onDragStart);
+
+counterBoard.addEventListener("focus", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
-  e.target.dataset["beforeTitle"] = e.target.value;
+  e.target.dataset.previousTitle = e.target.value;
 }, { capture: true });
 
-document.querySelector("main").addEventListener("blur", (e) => {
+counterBoard.addEventListener("blur", (e) => {
   if (!e.target.matches(".counter > .title > input")) return;
-  delete e.target.dataset["beforeTitle"];
-  saveWorkspace();
+  delete e.target.dataset.previousTitle;
 }, { capture: true });
 
-document.querySelector("main").addEventListener("keydown", (e) => {
+counterBoard.addEventListener("keydown", (e) => {
   const counter = e.target.closest(".counter");
   if (!counter || counter.hasAttribute('data-dragging')) return;
 
@@ -39,7 +51,7 @@ document.querySelector("main").addEventListener("keydown", (e) => {
   if (e.target.matches(".title > input")) {
     switch (e.key) {
       case "Escape":
-        e.target.value = e.target.dataset["beforeTitle"];
+        e.target.value = e.target.dataset.previousTitle;
         // fall through
       case "Enter":
         e.preventDefault();
@@ -63,28 +75,6 @@ document.querySelector("main").addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 });
-
-document.querySelector("#add-counter").addEventListener("click", (e) => {
-  const container = e.currentTarget.parentElement;
-  container.insertBefore(createCounterElement(), e.currentTarget);
-});
-
-document.querySelector("#delete-all-counters").addEventListener("click", (e) => {
-  document.querySelectorAll(".counter").forEach((counter) => {
-    counter.remove();
-    counters.delete(counter);
-  });
-});
-
-function saveWorkspace() {
-  const counters = Array.from(document.querySelectorAll(".counter")).map((elm) => {
-    const title = elm.querySelector(".title input").value;
-    const count = elm.querySelector("input.display").valueAsNumber;
-    return { title, count }
-  });
-
-  localStorage.setItem("counterState", JSON.stringify(counters));
-}
 
 /**
  * JSDocつけてみる
@@ -113,44 +103,44 @@ function createCounterElement(initTitle = "", initCount = 0) {
     counter.querySelector("input.display").value = initCount;
   }
 
-  setupCounterButtonBehavior(counter);
-
   return counter;
 }
 
-/**
- * カウンターの各ボタンに対するイベントハンドラを登録する
- * @param {HTMLDivElement} counter クリックイベント未登録のカウンター要素
- */
-function setupCounterButtonBehavior(counter) {
-  if (!(counter instanceof HTMLDivElement) || !counter.matches(".counter")) return;
-  if (counters.has(counter)) return;
-  counters.add(counter);
-  counter.addEventListener("click", (e) => {
-    const isPlus = e.target.classList.contains("plus");
-    const isMinus = e.target.classList.contains("minus");
-    const isReset = e.target.classList.contains("reset");
-    const isRemove = e.target.classList.contains("remove");
+function handleHeaderButtonClick(button) {
+  if (button.matches("#delete-all-counters")) {
+    document.querySelectorAll(".counter").forEach((counter) => counter.remove());
+  }
+}
 
-    if (isRemove) {
-      counter.remove();
-      counters.delete(counter);
-      return;
+function handleMainButtonClick(button) {
+  if (button.matches("#add-counter")) {
+    counterBoard.insertBefore(createCounterElement(), button);
+    return;
+  }
+
+  const counter = button.closest(".counter");
+
+  const isPlus = button.matches(".plus");
+  const isMinus = button.matches(".minus");
+  const isReset = button.matches(".reset");
+  const isRemove = button.matches(".remove");
+
+  if (isRemove) {
+    counter.remove();
+    return;
+  }
+
+  if (isPlus || isMinus || isReset) {
+    const display = counter.querySelector("input.display");
+
+    if (isPlus) {
+      display.valueAsNumber++;
+    } else if (isMinus) {
+      display.valueAsNumber--;
+    } else if (isReset) {
+      display.valueAsNumber = 0;
     }
 
-    if (isPlus || isMinus || isReset) {
-      const display = counter.querySelector(".display");
-
-      if (isPlus) {
-        display.valueAsNumber++;
-      } else if (isMinus) {
-        display.valueAsNumber--;
-      } else if (isReset) {
-        display.valueAsNumber = 0;
-      }
-
-      saveWorkspace();
-      counter.focus({ focusVisible: true });
-    }
-  });
+    counter.focus({ focusVisible: true });
+  }
 }
