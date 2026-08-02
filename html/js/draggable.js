@@ -5,7 +5,7 @@ function enableDragSort() {
 }
 
 function disableDragSort() {
-  document.removeEventListener("pointerdown", onDragStart);
+  document.removeEventListener("pointerdown", onDragStart, { capture: true });
 }
 
 /**
