@@ -55,9 +55,6 @@ body {
     z-index: 0;
     flex-grow: 1;
     background-color: #D9D9D9;
-
-    .backdrop { position: absolute; }
-    .container { position: relative; }
   }
 
   footer {
