@@ -53,8 +53,8 @@ function onDragStart(event) {
       container.insertBefore(dragTarget, otherCounters[insertOrder] ?? insertAnchor);
     }
 
-    for (const elm of container.children) {
-      elm.removeAttribute("style");
+    for (const elment of container.children) {
+      elment.removeAttribute("style");
     }
     dragTarget.toggleAttribute('data-dragging', false);
     dragTarget.focus({ focusVisible: true });
