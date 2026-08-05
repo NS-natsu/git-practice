@@ -1,37 +1,53 @@
 "use strict";
 
+function enableDragSort() {
+  document.addEventListener("pointerdown", onDragStart, { capture: true });
+}
+
+function disableDragSort() {
+  document.removeEventListener("pointerdown", onDragStart, { capture: true });
+}
+
 /**
  * ドラッグ開始時のイベントハンドラ
  * @param {PointerEvent} event
  */
 function onDragStart(event) {
-  const container = event.currentTarget;
-  if (!container || !event.target?.matches?.(".dragger")) {
+  const container = event.target.closest(".sortable");
+  if (!container || !event.target?.matches?.(".drag-handle")) {
+    return;
+  }
+
+  // placeholderがないと置換できないため先にチェック
+  const placeholder = container.querySelector(".placeholder");
+  if (!placeholder) {
     return;
   }
 
   // ドラッグ中は多重発火防止のためハンドラを無効化する
-  container.removeEventListener(event.type, onDragStart);
+  disableDragSort();
+  event.stopPropagation();
 
-  const dragTarget = event.target.closest(".counter");
-  const placeholder = container.querySelector(".placeholder");
-  const insertAnchor = container.querySelector("#add-counter");
+  const dragTarget = event.target.closest(".draggable");
+  const insertAnchor = container.querySelector("[data-anchor]");
 
   // ドラッグ対象を除いた並びで再配置するため、先に元の位置を取得してから除外する
-  const otherCounters = Array.from(container.querySelectorAll(".counter"));
-  let insertOrder = otherCounters.indexOf(dragTarget);
-  otherCounters.splice(insertOrder, 1);
+  const otherDraggables = Array.from(container.querySelectorAll(".draggable"));
+  let insertOrder = otherDraggables.indexOf(dragTarget);
+  otherDraggables.splice(insertOrder, 1);
 
   // 移動可能なことがわかるように少しずらす
   dragTarget.style.left = `${dragTarget.offsetLeft - 5}px`;
   dragTarget.style.top = `${dragTarget.offsetTop - 5}px`;
   dragTarget.toggleAttribute('data-dragging', true);
 
-  otherCounters.forEach((counter, index) => {
-    counter.style.order = index;
+  otherDraggables.forEach((element, index) => {
+    element.style.order = index;
   });
   placeholder.style.order = insertOrder;
-  insertAnchor.style.order = otherCounters.length;
+  if (insertAnchor) {
+    insertAnchor.style.order = otherDraggables.length;
+  }
 
   /** @param {PointerEvent} */
   const onPointerMove = ({ movementX, movementY }) => {
@@ -39,7 +55,7 @@ function onDragStart(event) {
     dragTarget.style.left = `${dragTarget.offsetLeft + movementX}px`;
 
     const orderDelta = getOrderDelta(dragTarget, placeholder, container);
-    insertOrder = clampNumber(insertOrder + orderDelta, 0, otherCounters.length);
+    insertOrder = clampNumber(insertOrder + orderDelta, 0, otherDraggables.length);
 
     placeholder.style.order = insertOrder;
   };
@@ -50,7 +66,7 @@ function onDragStart(event) {
     controller.abort();
 
     if (eventType === "pointerup") {
-      container.insertBefore(dragTarget, otherCounters[insertOrder] ?? insertAnchor);
+      container.insertBefore(dragTarget, otherDraggables[insertOrder] ?? insertAnchor);
     }
 
     for (const element of container.children) {
@@ -59,7 +75,7 @@ function onDragStart(event) {
     dragTarget.toggleAttribute('data-dragging', false);
     dragTarget.focus({ focusVisible: true });
 
-    container.addEventListener(event.type, onDragStart);
+    enableDragSort();
   }
 
   // ドラッグ終了時のイベント定義
@@ -84,8 +100,8 @@ function getOrderDelta(dragItem, referenceItem, gridContainer) {
   const trackWidth = referenceItem.offsetWidth + columnGap;
   const trackHeight = referenceItem.offsetHeight + rowGap;
 
-  const maxColumns = Math.max(1, Math.floor((gridContainer.offsetWidth + columnGap) / trackWidth));
-  const maxRows = Math.max(1, Math.floor((gridContainer.offsetHeight + rowGap) / trackHeight));
+  const maxColumns = containerStyle.gridTemplateColumns.split(' ').length;
+  const maxRows = containerStyle.gridTemplateRows.split(' ').length;
 
   const baseRow = Math.floor(referenceItem.offsetTop / trackHeight);
   const baseColumn = Math.floor(referenceItem.offsetLeft / trackWidth);
