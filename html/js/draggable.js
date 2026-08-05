@@ -41,8 +41,8 @@ function onDragStart(event) {
   dragTarget.style.top = `${dragTarget.offsetTop - 5}px`;
   dragTarget.toggleAttribute('data-dragging', true);
 
-  otherDraggables.forEach((counter, index) => {
-    counter.style.order = index;
+  otherDraggables.forEach((element, index) => {
+    element.style.order = index;
   });
   placeholder.style.order = insertOrder;
   if (insertAnchor) {
