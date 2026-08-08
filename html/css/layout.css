@@ -7,6 +7,7 @@ input {
 }
 
 button {
+  display: block;
   appearance: none;
   outline: none;
   border: none;
@@ -94,7 +95,6 @@ body {
     background-position: 0 0, 4px 4px;
     background-size: 8px 8px;
     cursor: grab;
-    &:active { cursor: grabbing; }
   }
 
   &[data-dragging] {
@@ -102,4 +102,9 @@ body {
     z-index: 1;
     filter: contrast(90%);
   }
+}
+
+body:has(.drag-handle:active) {
+  cursor: grabbing;
+  * { cursor: grabbing; }
 }
