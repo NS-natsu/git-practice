@@ -1,6 +1,11 @@
+header:has(> #preset-area) { anchor-name: --header-anchor; }
+
+#preset-area:has(#preset-board:popover-open) {
+  #preset-toggle-button::after { scale: 1 0.5; }
+}
+
 #preset-toggle-button {
   anchor-name: --preset-anchor;
-  margin-inline: 0.5rem;
   border-radius: 5px;
   padding-inline: 0.5rem;
   background-color: #D9D9D9;
@@ -17,10 +22,6 @@
   }
 }
 
-#preset-area:has(#preset-board:popover-open) {
-  #preset-toggle-button::after { scale: 1 0.5; }
-}
-
 @starting-style {
   #preset-board:popover-open {
     opacity: 0;
@@ -29,11 +30,11 @@
 }
 #preset-board.sortable {
   display: grid;
-  top: calc(anchor(--preset-anchor bottom) + 5px);
+  top: anchor(--header-anchor bottom);
   left: anchor(--preset-anchor left);
   grid-auto-rows: 2rem;
   gap: 5px;
-  width: calc(10rem + 10px);
+  width: calc(10rem + 12px);
   overflow: visible;
   margin: 0;
   border: solid #252525 1px;
@@ -73,14 +74,10 @@
 
 .preset {
   display: grid;
-  grid-template-areas: "grip title remove";
-  grid-template-columns: 6px 1fr auto;
-  grid-auto-flow: column; /* templateとautoどっち先にしようか */
+  grid-template: "grip title remove" / 6px 1fr auto;
   align-items: center;
   gap: 5px;
   border-radius: 5px;
-  width: 10rem;
-  height: 2rem;
   padding: 3px 5px;
   background-color: #FFFFFF;
 
@@ -95,7 +92,6 @@
   }
 
   .title {
-    position: relative;
     grid-area: title;
     text-align: left;
 
