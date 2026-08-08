@@ -59,7 +59,7 @@
   color: #FFFFFF;
   font-size: calc(2rem - 6px);
 
-  &:hover:not(:disabled) {
+  &:enabled:hover {
     border-color: #252525;
     color: #252525;
   }
