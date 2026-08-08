@@ -1,4 +1,5 @@
 #preset-toggle-button {
+  anchor-name: --preset-anchor;
   margin-inline: 0.5rem;
   border-radius: 5px;
   padding-inline: 0.5rem;
@@ -28,8 +29,8 @@
 }
 #preset-board.sortable {
   display: grid;
-  top: calc(anchor(bottom) + 5px);
-  left: anchor(left);
+  top: calc(anchor(--preset-anchor bottom) + 5px);
+  left: anchor(--preset-anchor left);
   grid-auto-rows: 2rem;
   gap: 5px;
   width: calc(10rem + 10px);
